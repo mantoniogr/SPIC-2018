@@ -5,7 +5,7 @@ import numpy
 import glob
 import random
 
-holes = 3
+holes = 5
 
 # Ask user for folder
 directory_name = raw_input("-> Directory name: ")
@@ -30,17 +30,24 @@ for fname in images:
         x = random.random()
         y = random.random()
 
-        axis1 = random.random()
-        axis2 = random.random()
+        # axis1 = random.random()
+        # axis2 = random.random()
+        # angle_start = random.random()
+        # angle_end = random.random()
+        # angle = random.random()
 
-        angle_start = random.random()
-        angle_end = random.random()
+        radius = random.random()
 
-        cv2.ellipse(image, (int(x*w),int(y*h)), (int(axis1*w),int(axis2*h)), 45, angle_start, angle_end, (255), 0)
+        height = random.random()
+
+        # Add random noise
+        # cv2.ellipse(image, (int(x*w),int(y*h)), (int(axis1*w*0.3),int(axis2*h*0.3)), angle*360, angle_start*360, angle_end*360, (0), -1)
+        if i%2 == 0:
+            cv2.circle(image, (int(x*w),int(y*h)), int(radius*0.1*w), (0), -1)
+        else:
+            cv2.rectangle(image, (int(x*w),int(y*h)), (int(x*w+height*w*0.2),int(y*h+height*h*0.2)), (0), -1)
         cv2.imshow("Test", image)
         cv2.waitKey(100)
 
-# Add random noise
-
-
-# Save images
+        # Save images
+    cv2.imwrite(fname[0:len(fname)-4]+"-noise.png", image)
