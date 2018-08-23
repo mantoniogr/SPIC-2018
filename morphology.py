@@ -37,8 +37,8 @@ def dilatacion(img, n):
 				if imgAuxiliar[j, i, 0] < imgAuxiliar[j-1, i, 0]:
 					imgAuxiliar[j, i, 0] = imgAuxiliar[j-1, i, 0]
 
-	imgAuxiliar[:,:,1] = imgAuxiliar[:,:,0]
-	imgAuxiliar[:,:,2] = imgAuxiliar[:,:,0]
+	# imgAuxiliar[:,:,1] = imgAuxiliar[:,:,0]
+	# imgAuxiliar[:,:,2] = imgAuxiliar[:,:,0]
 
 	return imgAuxiliar
 

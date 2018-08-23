@@ -27,28 +27,30 @@ Used functions: rgb2gray, threshold, negative, conteo
 # Ask user for folder
 directory_name = raw_input("-> Directory name: ")
 
-# Read depth images from database folder
-images_mcbr = glob.glob(directory_name + '/*MCbR.png')
-print images_mcbr
+# # Read depth images from database folder
+# images_mcbr = glob.glob(directory_name + '/*MCbR.png')
+# print images_mcbr
+#
+# # Read depth images from database folder
+# images_closing = glob.glob(directory_name + '/*closing.png')
+# print images_closing
 
 # Read depth images from database folder
-images_closing = glob.glob(directory_name + '/*closing.png')
-print images_closing
+images = glob.glob(directory_name + '/*.pgm')
+print images
 
-# Read depth images from database folder
-images_color = glob.glob(directory_name + '/*.ppm')
-print images_color
-
-# Read depth images from database folder
-images_depth = glob.glob(directory_name + '/*.pgm')
-print images_depth
+# # Read depth images from database folder
+# images_depth = glob.glob(directory_name + '/*.pgm')
+# print images_depth
 
 for fname in images:
     # Inputs
-    color = cv2.imread("Image5/view1_2_1.png")
-    depth = cv2.imread("Image5/disp1.png")
-    depth_mcbr = cv2.imread("Image5/mcbr.png")
-    depth_closing = cv2.imread("Image5/closing1.png")
+    color = cv2.imread("images\im"+fname[12:len(fname)-4]+".ppm", 1)
+    depth = cv2.imread(fname, 1)
+    depth_mcbr = cv2.imread(fname[0:len(fname)-4]+"-noise-MCbR.png", 1)
+    depth_closing = cv2.imread(fname[0:len(fname)-4]+"-noise-closing.png", 1)
+
+    print "images\\\im"+fname[11:len(fname)-4]+".ppm"
 
     # Image closing lambda 1 to gray
     depth_closing_gray = f.rgb2gray(depth_closing)

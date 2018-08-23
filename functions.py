@@ -4,6 +4,77 @@ import numpy as np
 #import matplotlib.mlab as mlab
 import math
 
+def rgb2gray(img):
+	height, width, channels =  img.shape
+	aux = np.copy(img)
+
+	for j in range(0, height):
+		for i in range(0, width):
+			aux[j,i,0] = 0.333*img[j, i, 0] + 0.333*img[j, i, 1] \
+			+ 0.333*img[j, i, 2]
+
+	aux[:,:,0] = aux[:,:,0]
+	aux[:,:,1] = aux[:,:,0]
+	aux[:,:,2] = aux[:,:,0]
+
+	return aux
+
+def threshold(img, th1, th2):
+	height, width, channels =  img.shape
+	aux = np.copy(img)
+
+	for j in range(0, height):
+		for i in  range(0, width):
+			if img[j, i, 0] > th1 and th2 > img[j, i, 0]:
+				aux[j, i, 0] = 255;
+			else:
+				aux[j, i, 0] = 0;
+
+	if channels==3:
+		aux[:,:,1] = aux[:,:,0]
+		aux[:,:,2] = aux[:,:,0]
+
+	return aux
+
+def negative(img):
+	height, width, channels =  img.shape
+	aux = np.copy(img)
+
+	for j in range(0, height):
+		for i in  range(0, width):
+			aux[j, i, 0] = 255 - img[j, i, 0]
+
+	if channels==3:
+		aux[:,:,1] = aux[:,:,0]
+		aux[:,:,2] = aux[:,:,0]
+
+	return aux
+
+def count(img):
+	aux = np.copy(img)
+	height, width, channels =  img.shape
+
+	k = 0
+	fifo = []
+
+	for j in range(0, height):
+		for i in range(0, width):
+			if img[j,i,0] != 0:
+				k = k + 1
+				fifo.append([j,i])
+				img[j,i,0] = 0
+				aux[j,i,0] = k
+				while(fifo):
+					primas = fifo.pop(0)
+					for n in range(primas[0] - 1, primas[0] + 2):
+						for m in range(primas[1] - 1, primas[1] + 2):
+							if img[n,m,0] != 0:
+								fifo.append([n,m])
+								img[n,m,0] = 0
+								aux[n,m,0] = k
+
+	return aux, k
+
 def histogramaGris(img):
 	H = np.zeros(500)
 
@@ -108,8 +179,8 @@ def negativoGrises(img):
 		for i in  range(0, width):
 			negativo[j, i, 0] = 255 - img[j, i, 0]
 
-	negativo[:,:,1] = negativo[:,:,0]
-	negativo[:,:,2] = negativo[:,:,0]
+	# negativo[:,:,1] = negativo[:,:,0]
+	# negativo[:,:,2] = negativo[:,:,0]
 
 	return negativo
 
