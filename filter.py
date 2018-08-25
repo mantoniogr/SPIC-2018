@@ -45,7 +45,7 @@ print images
 
 for fname in images:
     # Inputs
-    color = cv2.imread("images\\\im"+fname[11:len(fname)-4] + ".ppm", 1)
+    color = cv2.imread("images\\\im"+fname[11:len(fname)-4] + "-hs.png", 1)
     depth = cv2.imread(fname, 1)
     depth_mcbr = cv2.imread(fname[0:len(fname)-4] + "-noise-MCbR.png", 1)
     depth_closing = cv2.imread(fname[0:len(fname)-4] + "-noise-closing.png", 1)
@@ -109,14 +109,12 @@ for fname in images:
     for n in range(1, objects + 1):
         acc1 = 0
         acc2 = 0
-
         k = 0
         l = 0
-
         hole_n = f.threshold(holes_marked, n - 1, n + 1)
+        # cv2.imwrite("test/"+  fname[11:len(fname)-4] + "-holes_marked.png", hole_n)
         EG = m.gradienteExterno(hole_n, 1)
         IG = m.gradienteInterno(hole_n, 1)
-
         for j in range(0, height):
             for i in range(0, width):
                 if EG[j + 1, i + 1, 0] == 255:
@@ -125,22 +123,18 @@ for fname in images:
                 if IG[j + 1, i + 1, 0] == 255:
                     acc2 = acc2 + depth_mcbr[j, i, 0]
                     l += 1
-
         if abs(acc1 / k - acc2 / l) <= 1:
             lista.append(n)
-
         n += 1
 
-    print lista
-
-    for l in range(0, len(lista)):
-        m = lista.pop()
+    for element in lista:
+        # m = lista.pop()
         for j in range(0, height):
             for i in range(0, width):
-                if holes_marked[j, i, 0] == m:
+                if holes_marked[j, i, 0] == element:
                     holes_gray[j, i, 2] = 255
+    cv2.imwrite("test/" + fname[11:len(fname)-4] + "-holes-gray.png", holes_gray)
 
-    cv2.imwrite("test/" + fname[11:len(fname)-4] + "-holes_gray.png", holes_gray)
 
     '''
 
@@ -267,7 +261,7 @@ for fname in images:
         methods = ['cv2.TM_CCOEFF', 'cv2.TM_CCOEFF_NORMED', 'cv2.TM_CCORR',
                    'cv2.TM_CCORR_NORMED', 'cv2.TM_SQDIFF', 'cv2.TM_SQDIFF_NORMED']
 
-        m = 1
+        z = 1
 
         print depth.shape
         print templateD.shape
@@ -312,7 +306,7 @@ for fname in images:
                         maxVal_depth = maxVal
 
             cv2.rectangle(img, coords, (coords[0] + h, coords[1] + w), (0, 0, 255), 1)
-            cv2.imwrite('test/img' + str(n) + str(m) + 'D.png', img)
+            cv2.imwrite('test/img' + fname[11:len(fname)-4] + str(n) + str(z) + 'D.png', img)
 
             # if meth == 'cv2.TM_SQDIFF' or meth == 'cv2.TM_SQDIFF_NORMED':
             # 	cv2.rectangle(img, minLoc, (minLoc[0] + w, minLoc[1] + h), (0, 0, 255), 1)
@@ -321,14 +315,14 @@ for fname in images:
             # 	cv2.rectangle(img, maxLoc, (maxLoc[0] + w, maxLoc[1] + h), (0, 0, 255), 1)
             # 	cv2.imwrite('test/img' + str(m) + str(n) + 'D.png', img)
 
-            m += 1
+            z += 1
 
             if dist < dist_depth:
                 dist_depth = dist
                 coords_best_depth = coords
         cv2.rectangle(img, coords_best_depth, (coords_best_depth[0] + h, coords_best_depth[1] + w), (0, 0, 255), 1)
         img[min_y-1:max_y+1, min_x-1:max_x+1] = depthAux[min_y-1:max_y+1, min_x-1:max_x+1]
-        cv2.imwrite('test/img' + str(n) + 'DB.png', img)
+        cv2.imwrite('test/img' + fname[11:len(fname)-4] + str(n) + 'DB.png', img)
 
         if dist_depth > 0:
             s_depth = maxVal_depth / dist_depth
@@ -345,7 +339,7 @@ for fname in images:
         Outputs:
 
         '''
-        m=1
+        z = 1
         dist = height*width
         for meth in methods:
             img = color.copy()
@@ -378,7 +372,7 @@ for fname in images:
                         maxVal_color = maxVal
 
             cv2.rectangle(img, coords, (coords[0] + h, coords[1] + w), (0, 0, 255), 1)
-            cv2.imwrite('test/img' + str(n) + str(m) + 'C.png', img)
+            cv2.imwrite('test/img' + fname[11:len(fname)-4] + str(n) + str(z) + 'C.png', img)
 
             # if meth == 'cv2.TM_SQDIFF' or meth == 'cv2.TM_SQDIFF_NORMED':
             # 	cv2.rectangle(img, minLoc, (minLoc[0] + w, minLoc[1] + h), (0, 0, 255), 1)
@@ -387,14 +381,14 @@ for fname in images:
             # 	cv2.rectangle(img, maxLoc, (maxLoc[0] + w, maxLoc[1] + h), (0, 0, 255), 1)
             # 	cv2.imwrite('test/img' + str(m) + str(n) + 'D.png', img)
 
-            m += 1
+            z += 1
 
             if dist < dist_color:
                 dist_color = dist
                 coords_best_color = coords
         img[min_y-1:max_y+1, min_x-1:max_x+1] = colorAux[min_y-1:max_y+1, min_x-1:max_x+1]
         cv2.rectangle(img, coords_best_color, (coords_best_color[0] + h, coords_best_color[1] + w), (0, 0, 255), 1)
-        cv2.imwrite('test/img' + str(n) + 'CB.png', img)
+        cv2.imwrite('test/img' + fname[11:len(fname)-4] + str(n) + 'CB.png', img)
 
         if dist_color > 0:
             s_color = maxVal_color / dist_color
@@ -503,4 +497,4 @@ for fname in images:
 
         depth_mcbr[:,:,1] = depth_mcbr[:,:,0]
         depth_mcbr[:,:,2] = depth_mcbr[:,:,0]
-        cv2.imwrite("test/Filtered_average" + str(n) + ".png", depth_mcbr)
+        cv2.imwrite("test/Filtered_average" + fname[11:len(fname)-4] + str(n) + ".png", depth_mcbr)
