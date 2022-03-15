@@ -7,11 +7,12 @@ import cv2
 import glob
 
 # Ask user for folder
-directory_name = raw_input("-> Directory name: ")
+# directory_name = raw_input("-> Directory name: ")
+path = "../images/"
 
 # Read depth images from database folder
-images = glob.glob(directory_name + '/*.png')
-print images
+images = glob.glob(path + '/*.png')
+print (images)
 
 for fname in images:
 	# filter size
